@@ -10,12 +10,15 @@ const pool = require('./database/postgres/pool');
 
 // service (repository, helper, manager, etc)
 const UserRepository = require('../Domains/users/UserRepository');
+const ProductRepository = require('../Domains/products/ProductRepository');
 const PasswordHash = require('../Applications/security/PasswordHash');
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
+const ProductRepositoryPostgres = require('./repository/ProductRepositoryPostgres');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
+const AddProductUseCase = require('../Applications/use_case/AddProductUseCase');
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
 const JwtTokenManager = require('./security/JwtTokenManager');
 const LoginUserUseCase = require('../Applications/use_case/LoginUserUseCase');
@@ -32,6 +35,20 @@ container.register([
   {
     key: UserRepository.name,
     Class: UserRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: ProductRepository.name,
+    Class: ProductRepositoryPostgres,
     parameter: {
       dependencies: [
         {

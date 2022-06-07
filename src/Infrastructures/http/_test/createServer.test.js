@@ -18,8 +18,8 @@ describe('HTTP server', () => {
   it('should handle server error correctly', async () => {
     // Arrange
     const requestPayload = {
-      username: 'dicoding',
-      fullname: 'Dicoding Indonesia',
+      username: 'albertanugerah',
+      fullname: 'albert anugerah',
       password: 'super_secret',
     };
     const server = await createServer({}); // fake injection
@@ -28,6 +28,32 @@ describe('HTTP server', () => {
     const response = await server.inject({
       method: 'POST',
       url: '/users',
+      payload: requestPayload,
+    });
+
+    // Assert
+    const responseJson = JSON.parse(response.payload);
+    expect(response.statusCode).toEqual(500);
+    expect(responseJson.status).toEqual('error');
+    expect(responseJson.message).toEqual('terjadi kegagalan pada server kami');
+  });
+
+  it('should handle server error correctly', async () => {
+    // Arrange
+    const requestPayload = {
+      name: 'ini produk',
+      sku: 23123233,
+      image: 'ini_image.jpg',
+      price: 100000,
+      description: 'description',
+
+    };
+    const server = await createServer({}); // fake injection
+
+    // Action
+    const response = await server.inject({
+      method: 'POST',
+      url: '/products',
       payload: requestPayload,
     });
 
