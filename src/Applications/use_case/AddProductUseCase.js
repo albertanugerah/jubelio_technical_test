@@ -7,7 +7,7 @@ class AddProductUseCase {
 
   async execute(useCasePayload) {
     const addProduct = new AddProduct(useCasePayload);
-    await this._productRepository.verifyAvailableSKU(addProduct.SKU);
+    await this._productRepository.verifyAvailableSKU(addProduct.sku);
     return this._productRepository.addProduct(addProduct);
   }
 }

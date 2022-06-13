@@ -3,25 +3,27 @@ class AddedProduct {
     this._verifyPayload(payload);
 
     const {
-      id, name, SKU, image, price, description,
+      id, name, sku, image, price, description, owner,
     } = payload;
 
     this.id = id;
     this.name = name;
-    this.SKU = SKU;
+    this.sku = sku;
     this.image = image;
     this.price = price;
     this.description = description;
+    this.owner = owner;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   _verifyPayload({
-    id, name, SKU, image, price, description,
+    id, name, sku, image, price, description, owner,
   }) {
-    if (!id || !name || !SKU || !image || !price) {
+    if (!id || !name || !sku || !image || !price || !owner) {
       throw new Error('ADDED_PRODUCT.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof id !== 'number' || typeof name !== 'string' || typeof SKU !== 'number' || typeof image !== 'string' || typeof price !== 'number' || typeof description !== 'string' || typeof description === 'undefined') {
+    if (typeof id !== 'string' || typeof name !== 'string' || typeof sku !== 'number' || typeof image !== 'string' || typeof price !== 'number' || typeof description !== 'string' || typeof owner !== 'string') {
       throw new Error('ADDED_PRODUCT.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

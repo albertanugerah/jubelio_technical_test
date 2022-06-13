@@ -17,6 +17,12 @@ DomainErrorTranslator._directories = {
   'REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token harus string'),
   'DELETE_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN': new InvariantError('harus mengirimkan token refresh'),
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('refresh token harus string'),
+  'ADD_PRODUCT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat membuat produk baru karena properti yang dibutuhkan tidak ada'),
+  'ADD_PRODUCT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat membuat produk baru karena tipe data tidak sesuai'),
+  'ADD_PRODUCT.NAME_LIMIT_CHAR': new InvariantError('tidak dapat membuat produk baru karena karakter name melebihi batas limit'),
+  'ADDED_PRODUCT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat membuat produk baru karena properti yang dibutuhkan tidak ada'),
+  'ADDED_PRODUCT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tidak dapat membuat produk baru karena tipe data tidak sesuai'),
+
 };
 
 module.exports = DomainErrorTranslator;

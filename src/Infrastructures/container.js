@@ -115,6 +115,19 @@ container.register([
     },
   },
   {
+    key: AddProductUseCase.name,
+    Class: AddProductUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'productRepository',
+          internal: ProductRepository.name,
+        },
+      ],
+    },
+  },
+  {
     key: LoginUserUseCase.name,
     Class: LoginUserUseCase,
     parameter: {

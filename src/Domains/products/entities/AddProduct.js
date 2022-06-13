@@ -3,27 +3,28 @@ class AddProduct {
     this._verifyPayload(payload);
 
     const {
-      name, SKU: sku, image, price, description,
+      name, sku, image, price, description = null, owner,
     } = payload;
 
     this.name = name;
-    this.SKU = sku;
+    this.sku = sku;
     this.image = image;
     this.price = price;
     this.description = description;
+    this.owner = owner;
   }
 
   _verifyPayload({
-    name, SKU: sku, image, price, description,
+    name, sku, image, price, description, owner,
   }) {
-    if (!name || !sku || !image || !price) {
+    if (!name || !sku || !image || !price || !owner) {
       throw new Error('ADD_PRODUCT.NOT_CONTAIN_NEEDED_PROPERTY');
     }
     if (name.length > 100) {
       throw new Error('ADD_PRODUCT.NAME_LIMIT_CHAR');
     }
 
-    if (typeof name !== 'string' || typeof sku !== 'number' || typeof image !== 'string' || typeof price !== 'number' || typeof description !== 'string' || typeof description === 'undefined') {
+    if (typeof name !== 'string' || typeof sku !== 'number' || typeof image !== 'string' || typeof price !== 'number' || typeof description !== 'string' || typeof owner !== 'string') {
       throw new Error('ADD_PRODUCT.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

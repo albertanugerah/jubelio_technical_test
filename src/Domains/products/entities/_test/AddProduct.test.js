@@ -5,7 +5,7 @@ describe('a AddProduct entities', () => {
     // Arrange
     const payload = {
       name: 'nah',
-      SKU: 324343,
+      sku: 324343,
       image: 'ini image',
     };
 
@@ -17,10 +17,11 @@ describe('a AddProduct entities', () => {
     // Arrange
     const payload = {
       name: [],
-      SKU: true,
+      sku: true,
       image: 'ini image',
       price: true,
       description: '',
+      owner: [],
     };
 
     // Action and Assert
@@ -32,35 +33,38 @@ describe('a AddProduct entities', () => {
 
     const payload = {
       name: 'fljfaksjfkasfjlsfjsaldkfASFSAFSAFADSsajdflksafjlaksdfjlaskfjlsakdfjsaldkfjsdajfsalkfjlsafjsalkdjfsadlkfjsfasfsfdsadaldfjsaldkfjasdlkfj',
-      SKU: 8778686,
+      sku: 8778686,
       image: 'ini image',
       price: true,
-      description: '',
+      description: 'test',
+      owner: 'albert',
     };
 
     // Action and Assert
     expect(() => new AddProduct(payload)).toThrowError('ADD_PRODUCT.NAME_LIMIT_CHAR');
   });
 
-  it('should create addProduct  object correctly', () => {
+  it('should create addProduct object correctly', () => {
     // Arrange
     const payload = {
       name: 'Obat Mata',
-      SKU: 8778686,
+      sku: 8778686,
       image: 'ini image',
       price: 199,
       description: '',
+      owner: 'albert',
     };
     // Action
     const {
-      name, SKU, image, price, description,
+      name, sku, image, price, description, owner,
     } = new AddProduct(payload);
 
     // Assert
     expect(name).toEqual(payload.name);
-    expect(SKU).toEqual(payload.SKU);
+    expect(sku).toEqual(payload.sku);
     expect(image).toEqual(payload.image);
     expect(price).toEqual(payload.price);
     expect(description).toEqual(payload.description);
+    expect(owner).toEqual(payload.owner);
   });
 });

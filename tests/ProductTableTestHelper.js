@@ -3,16 +3,17 @@ const pool = require('../src/Infrastructures/database/postgres/pool');
 
 const ProductsTableTestHelper = {
   async addProduct({
-    id = 12321,
+    id = 'product-123',
     name = 'ini produk',
-    sku = 23123233,
+    sku = 123,
     image = 'ini_image.jpg',
-    price = 100000,
+    price = 1000,
     description = 'description',
+    owner = 'albert',
   }) {
     const query = {
-      text: 'INSERT INTO products VALUES($1, $2, $3, $4,$5,$6)',
-      values: [id, name, sku, image, price, description],
+      text: 'INSERT INTO products VALUES($1, $2, $3, $4,$5,$6,$7)',
+      values: [id, name, sku, image, price, description, owner],
     };
 
     await pool.query(query);

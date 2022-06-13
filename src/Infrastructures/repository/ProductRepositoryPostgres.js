@@ -9,28 +9,28 @@ class ProductRepositoryPostgres extends ProductRepository {
     this._idGenerator = idGenerator;
   }
 
-  async verifyAvailableSKU(SKU) {
+  async verifyAvailableSKU(sku) {
     const query = {
-      text: 'SELECT SKU FROM products WHERE SKU = $1',
-      values: [SKU],
+      text: 'SELECT sku FROM products WHERE sku = $1',
+      values: [sku],
     };
 
     const result = await this._pool.query(query);
 
-    if (result.rowCount) {
-      throw new InvariantError('SKU tidak tersedia');
+    if (result.rows.length >= 1) {
+      throw new InvariantError('SKU sudah ada');
     }
   }
 
-  async AddProduct(storeProduct) {
+  async addProduct(storeProduct) {
     const {
-      name, SKU, image, price, description,
+      name, sku, image, price, description, owner,
     } = storeProduct;
-    const id = this._idGenerator();
+    const id = `product-${this._idGenerator()}`;
 
     const query = {
-      text: 'INSERT INTO products VALUES($1, $2, $3, $4,$5,$6) RETURNING id, name, SKU, image,price,description',
-      values: [id, name, SKU, image, price, description],
+      text: 'INSERT INTO products VALUES($1, $2, $3, $4,$5,$6,$7) RETURNING id, name, sku, image,price,description,owner',
+      values: [id, name, sku, image, price, description, owner],
     };
 
     const result = await this._pool.query(query);

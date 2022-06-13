@@ -12,17 +12,10 @@
     "ecmaVersion": "latest"
   },
   "rules": {
-    "no-underscore-dangle": [
-      "error",
-      {
-        "allowAfterThis": true
-      }
-    ],
-    "class-methods-use-this": [
-      "error",
-      {
-        "enforceForClassFields": false
-      }
-    ]
+    "linebreak-style": "off",
+    "no-underscore-dangle": "off",
+    "class-methods-use-this": "off",
+    "no-unused-vars": "off",
+    "no-console": "off"
   }
 }

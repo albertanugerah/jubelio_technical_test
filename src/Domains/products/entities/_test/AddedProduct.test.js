@@ -5,7 +5,7 @@ describe('a AddedProduct entities', () => {
     // Arrange
     const payload = {
       name: 'obat kumur',
-      SKU: 100,
+      sku: 100,
     };
 
     // Action and Assert
@@ -16,11 +16,12 @@ describe('a AddedProduct entities', () => {
     // Arrange
     const payload = {
       id: '123',
-      name: 'buah pisang',
-      SKU: 100,
+      name: [],
+      sku: 100,
       image: 'ini image',
-      price: '200',
-      description: '',
+      price: true,
+      description: 'test',
+      owner: 'ini owner',
     };
 
     // Action and Assert
@@ -30,12 +31,13 @@ describe('a AddedProduct entities', () => {
   it('should create AddedProduct object correctly', () => {
     // Arrange
     const payload = {
-      id: 122,
+      id: '122',
       name: 'ini nama',
-      SKU: 100,
+      sku: 100,
       image: 'ini image',
       price: 200,
-      description: '',
+      description: 'tst',
+      owner: 'albert',
     };
 
     // Action
@@ -44,9 +46,10 @@ describe('a AddedProduct entities', () => {
     // Assert
     expect(addedProduct.id).toEqual(payload.id);
     expect(addedProduct.name).toEqual(payload.name);
-    expect(addedProduct.SKU).toEqual(payload.SKU);
+    expect(addedProduct.sku).toEqual(payload.sku);
     expect(addedProduct.image).toEqual(payload.image);
     expect(addedProduct.price).toEqual(payload.price);
     expect(addedProduct.description).toEqual(payload.description);
+    expect(addedProduct.owner).toEqual(payload.owner);
   });
 });

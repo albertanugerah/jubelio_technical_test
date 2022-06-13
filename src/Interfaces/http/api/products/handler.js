@@ -9,16 +9,24 @@ class ProductsHandler {
 
   async postProductHandler(request, h) {
     const addProductUseCase = this._container.getInstance(AddProductUseCase.name);
-    const addedProduct = await addProductUseCase.execute(request.payload);
+    const { id: owner } = request.auth.credentials;
 
-    const response = h.response({
+    const useCasePayload = {
+      name: request.payload.name,
+      sku: request.payload.sku,
+      image: request.payload.image,
+      price: request.payload.price,
+      description: request.payload.description,
+      owner,
+    };
+    const addedProduct = await addProductUseCase.execute(useCasePayload);
+
+    return h.response({
       status: 'success',
       data: {
         addedProduct,
       },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
   }
 }
 

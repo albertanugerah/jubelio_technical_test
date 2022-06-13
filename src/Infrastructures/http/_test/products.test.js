@@ -1,5 +1,6 @@
 const pool = require('../../database/postgres/pool');
 const ProductTableTestHelper = require('../../../../tests/ProductTableTestHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const container = require('../../container');
 const createServer = require('../createServer');
 
@@ -10,48 +11,56 @@ describe('/products endpoint', () => {
 
   afterEach(async () => {
     await ProductTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
   });
 
   describe('when POST /products', () => {
-    it('should response 201 and persisted user', async () => {
+    it('should response 401 if payload not access token', async () => {
       // Arrange
-      const requestPayload = {
-        name: 'ini produk',
-        SKU: 123,
-        image: 'ini_image.jpg',
-        price: 1000,
-        description: 'ini description',
-      };
-      // eslint-disable-next-line no-undef
       const server = await createServer(container);
-
       // Action
       const response = await server.inject({
         method: 'POST',
         url: '/products',
-        payload: requestPayload,
+        payload: {},
       });
 
-      // Assert
       const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(201);
-      expect(responseJson.status).toEqual('success');
-      expect(responseJson.data.addedUser).toBeDefined();
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toEqual('Missing authentication');
     });
-
     it('should response 400 when request payload not contain needed property', async () => {
       // Arrange
-      const requestPayload = {
-        image: 'ini_image.jpg',
-        price: 1000,
-      };
+      // initial server
       const server = await createServer(container);
+      await server.inject({
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'albert',
+          password: 'secret',
+          fullname: 'albert anugerah',
+        },
+      });
+
+      // login
+      const authentication = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'albert',
+          password: 'secret',
+        },
+      });
+      const responseAuth = JSON.parse(authentication.payload);
 
       // Action
       const response = await server.inject({
         method: 'POST',
         url: '/products',
-        payload: requestPayload,
+        payload: {},
+        headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
       });
 
       // Assert
@@ -63,20 +72,41 @@ describe('/products endpoint', () => {
 
     it('should response 400 when request payload not meet data type specification', async () => {
       // Arrange
+      const server = await createServer(container);
+      await server.inject({
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'albert',
+          password: 'secret',
+          fullname: 'albert anugerah',
+        },
+      });
+
       const requestPayload = {
         name: 'dicoding',
-        SKU: 123,
+        sku: 123,
         image: 'ini_image.jpg',
         price: true,
         description: ['ini description'],
       };
-      const server = await createServer(container);
+      const authentication = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'albert',
+          password: 'secret',
+        },
+      });
+
+      const responseAuth = JSON.parse(authentication.payload);
 
       // Action
       const response = await server.inject({
         method: 'POST',
         url: '/products',
         payload: requestPayload,
+        headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
       });
 
       // Assert
@@ -86,55 +116,52 @@ describe('/products endpoint', () => {
       expect(responseJson.message).toEqual('tidak dapat membuat produk baru karena tipe data tidak sesuai');
     });
 
-    it('should response 400 when name more than 100 character', async () => {
+    it('should response 201 and persisted user', async () => {
       // Arrange
-      const requestPayload = {
-        name: 'afdsafdsafdsasdfdsafdsafsfsadfsafdsfdsafadsaffdsdsafafdsadffdssdfdsafdsfdsafdsafdfasdfdsadsfdsffdsadfsdsffds',
-        SKU: 123,
-        image: 'ini_image.jpg',
-        price: 1000,
-        description: 'ini description',
+      const loginPayload = {
+        username: 'albert',
+        password: 'secret',
       };
       const server = await createServer(container);
+
+      await server.inject({
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'albert',
+          password: 'secret',
+          fullname: 'albert anugerah',
+        },
+      });
+      const authentication = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: loginPayload,
+      });
+
+      const responseAuth = JSON.parse(authentication.payload);
+
+      const requestPayload = {
+        name: 'Obat Mata',
+        sku: 1234,
+        image: 'ini image',
+        price: 1234,
+        description: 'test',
+      };
 
       // Action
       const response = await server.inject({
         method: 'POST',
         url: '/products',
         payload: requestPayload,
+        headers: { Authorization: `Bearer ${responseAuth.data.accessToken}` },
       });
 
       // Assert
       const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(400);
-      expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('tidak dapat membuat produk baru karena karakter name melebihi batas limit');
-    });
-
-    it('should response 400 when sku unavailable', async () => {
-      // Arrange
-      await ProductTableTestHelper.addProduct({ SKU: 123 });
-      const requestPayload = {
-        name: 'ini produk',
-        SKU: 123,
-        image: 'ini_image.jpg',
-        price: 1000,
-        description: 'ini description',
-      };
-      const server = await createServer(container);
-
-      // Action
-      const response = await server.inject({
-        method: 'POST',
-        url: '/products',
-        payload: requestPayload,
-      });
-
-      // Assert
-      const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(400);
-      expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('SKU tidak tersedia');
+      expect(response.statusCode).toEqual(201);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data.addedProduct.name).toEqual('Obat Mata');
     });
   });
 });

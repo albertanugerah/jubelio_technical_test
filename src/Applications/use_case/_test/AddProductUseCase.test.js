@@ -8,18 +8,20 @@ describe('AddProductUseCase', () => {
     // Arrange
     const useCasePayload = {
       name: 'Palugaada',
-      SKU: 23123233,
+      sku: 1234,
       image: 'ini_image.jpg',
       price: 100000,
       description: 'description',
+      owner: 'albert',
     };
     const expectedAddedProduct = new AddedProduct({
-      id: 123,
+      id: 'product-123',
       name: useCasePayload.name,
-      SKU: 2345,
+      sku: useCasePayload.sku,
       image: useCasePayload.image,
       price: useCasePayload.price,
       description: useCasePayload.description,
+      owner: useCasePayload.owner,
     });
 
     /** creating dependency of use case */
@@ -41,14 +43,14 @@ describe('AddProductUseCase', () => {
 
     // Assert
     expect(addedProduct).toStrictEqual(expectedAddedProduct);
-    expect(mockProductRepository.verifyAvailableSKU).toBeCalledWith(useCasePayload.SKU);
+    expect(mockProductRepository.verifyAvailableSKU).toBeCalledWith(useCasePayload.sku);
     expect(mockProductRepository.addProduct).toBeCalledWith(new AddProduct({
-      id: 123,
       name: useCasePayload.name,
-      SKU: 23123233,
+      sku: useCasePayload.sku,
       image: useCasePayload.image,
       price: useCasePayload.price,
       description: useCasePayload.description,
+      owner: useCasePayload.owner,
     }));
   });
 });
